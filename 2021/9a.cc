@@ -7,17 +7,6 @@ typedef pair<ll,ll> ii;
 #define REP(i,n) rep(i,0,n)
 #define sz(v) ((int) (v).size())
 
-vi parse(string line) {
-	for (char &ch : line)
-		if (ch == ',') ch = ' ';
-	stringstream ss(line);
-	vi v;
-	ll x;
-	while (ss >> x)
-		v.push_back(x);
-	return v;
-}
-
 int dx[4] = { 0, -1, 0, 1 };
 int dy[4] = { 1, 0, -1, 0 };
 

@@ -6,16 +6,12 @@ typedef vector<ll> vi;
 #define REP(i,n) rep(i,0,n)
 
 vi parse(string line) {
-	for (char &ch : line)
-		if (ch == ',') ch = ' ';
+	replace(line.begin(), line.end(), ',', ' ');
 	stringstream ss(line);
 	vi v;
-	ll x;
-	while (ss >> x)
-		v.push_back(x);
+	for (ll x; ss >> x; v.push_back(x));
 	return v;
 }
-
 
 int main() {
 	string line;

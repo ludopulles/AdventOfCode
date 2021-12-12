@@ -42,17 +42,6 @@ set<int> fillWith(int a, int b, int c) {
 	return res;
 }
 
-vi parse(string line) {
-	for (char &ch : line)
-		if (ch == ',') ch = ' ';
-	stringstream ss(line);
-	vi v;
-	ll x;
-	while (ss >> x)
-		v.push_back(x);
-	return v;
-}
-
 // acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
 
 ll run() {
