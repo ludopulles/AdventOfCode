@@ -59,6 +59,8 @@ print("Day ", curday, "\nRank |  Score |  Delta | ",
     ("{:>" + str(W) + "}").format("time"),
     " | Name", sep="")
 for i in range(len(fscores)):
+    if fscores[i][1] == 0:
+        continue
     _id = fscores[i][0]
     d = f"{deltas[_id]:+.2f}" if _id in deltas else ""
     s = round(fscores[i][1], 2)

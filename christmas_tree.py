@@ -11,7 +11,7 @@ if len(sys.argv) != 2:
 with open(sys.argv[-1], 'r') as myfile:
     data = json.loads(myfile.read())
 
-OFFSET = int((datetime.datetime(2021,12,1)-datetime.datetime(1970,1,1)).total_seconds())
+OFFSET = int((datetime.datetime(2022,12,1)-datetime.datetime(1970,1,1)).total_seconds())
 MARKERS = 'DXos'
 MARKERSIZES = [5,7,5,5]
 COLORS = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
