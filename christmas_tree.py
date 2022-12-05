@@ -5,8 +5,12 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.lines import Line2D
 
-if len(sys.argv) != 2:
-    exit("Usage: " + sys.argv[0] + " <json-file>\n")
+if len(sys.argv) != 2 and len(sys.argv) != 3:
+    exit("Usage: " + sys.argv[0] + " [day] <json-file>\n")
+
+day_limit = 25
+if len(sys.argv) == 3:
+    day_limit = int(sys.argv[1])
 
 with open(sys.argv[-1], 'r') as myfile:
     data = json.loads(myfile.read())
@@ -25,6 +29,8 @@ for x in scores.values():
     res = {}
     for day,submissions in x['completion_day_level'].items():
         d = int(day)
+        if d > day_limit:
+            continue
         res[d] = (
             (int(submissions['1']['get_star_ts'])-OFFSET)/60/60-24*(d-1)+(1 if name not in UK else 0) if '1' in submissions else None,
             (int(submissions['2']['get_star_ts'])-OFFSET)/60/60-24*(d-1)+(1 if name not in UK else 0) if '2' in submissions else None
