@@ -12,6 +12,14 @@ typedef pair<ll,ll> ii;
 #define x first
 #define y second
 
+ll parseInt(const string &s, int &pos) {
+	ll res = 0, sgn = 1;
+	if (pos < sz(s) && s[pos] == '-') sgn = -1, pos++;
+	while (pos < sz(s) && '0' <= s[pos] && s[pos] <= '9')
+		res = 10 * res + (s[pos++] - '0');
+	return sgn * res;
+}
+
 int main() {
 	string line;
 	getline(cin, line);
