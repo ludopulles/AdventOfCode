@@ -54,7 +54,8 @@ int main() {
 		maxy = max(maxy, S[i].y + D[i]);
 
 	ll total = 0;
-	rep(y, miny, maxy + 1) {
+	// rep(y, miny, maxy + 1) {
+	for (int y : { 10, 2000000 }) {
 		vii evts;
 		REP(i, sz(S)) {
 			if (S[i].y - D[i] <= y && y <= S[i].y + D[i]) {
