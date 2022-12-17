@@ -1,8 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-typedef vector<ll> vi;
 typedef pair<ll,ll> ii;
+typedef vector<ll> vi;
+typedef vector<ii> vii;
 #define rep(i,a,b) for (auto i = (a); i < (b); ++i)
 #define REP(i,n) rep(i,0,n)
 #define sz(v) ((int) (v).size())
