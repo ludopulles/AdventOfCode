@@ -18,7 +18,7 @@ with open(sys.argv[-1], 'r') as myfile:
 
 OFFSET = int((datetime.datetime(int(data['event']),12,1)-datetime.datetime(1970,1,1)).total_seconds())
 MARKERS = 'DXos'
-MARKERSIZES = [5,7,5,5]
+MARKERSIZES = [5,6,5,5]
 COLORS = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
 
 scores = data['members']
@@ -71,7 +71,7 @@ for i,(name,res) in enumerate(sorted(results.items(), key=lambda x : x[0].lower(
         color = COLORS[i%len(COLORS)]
         marker = MARKERS[i//len(COLORS)]
         markersize = MARKERSIZES[i//len(COLORS)]
-        ax.plot(newxs, newys, marker=marker, markersize=markersize+j-1, linestyle='', color=color, label=name if j == 0 else None, zorder=10)
+        ax.plot(newxs, newys, marker=marker, markersize=markersize, linestyle='', color=color, label=name if j == 0 else None, zorder=10)
         #ax.plot(newxs + [0] if name in ['noahiscool13','Olaf Erkemeij'] else [], newys + [28 if name == 'noahiscool13' else 27.5] if name in ['noahiscool13','Olaf Erkemeij'] else [], color=color, linestyle='--' if j == 1 else '-', alpha=.2)
         if len(newxs) == 25:
             newxs += [0]

@@ -36,7 +36,7 @@ def hms(t):
 def scoring(rank): # rank is zero based.
     N = len(members)
     return pow(N, 1.0 - rank / (N - 1))
-    # return len(members) - rank
+    #return len(members) - rank
 
 
 for day in range(1, curday + 1):
