@@ -18,26 +18,28 @@ int main() {
 
 	vector<vi> items;
 	vi cur;
-	while (getline(cin, line), cin) {
+	while (getline(cin, line)) {
 		if (line.empty()) {
-			// end of current 
-			items.pb(cur);
+			items.push_back(cur);
 			cur.clear();
 			continue;
+		} else {
+			int x;
+			stringstream ss(line);
+			ss >> x;
+			cur.push_back(x);
 		}
-
-		int x;
-		stringstream ss(line);
-		ss >> x;
-		cur.pb(x);
 	}
+	items.push_back(cur);
 
-	int res = 0;
-	for (vi v : items) {
-		int s = accumulate(all(v), 0);
-		res = max(res, s);
-	}
-	cout << res << endl;
+	vi sums;
+	for (vi v : items)
+		sums.push_back(accumulate(all(v), 0LL));
 
+	sort(all(sums));
+	int n = sz(sums);
+
+	printf("Part A: %lld\n", sums[n - 1]);
+	printf("Part B: %lld\n", sums[n - 3] + sums[n - 2] + sums[n - 1]);
 	return 0;
 }

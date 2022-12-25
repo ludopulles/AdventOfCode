@@ -15,34 +15,32 @@ typedef pair<ll,ll> ii;
 vector<string> grid;
 
 int main() {
-	string line;
-	while (getline(cin, line), cin)
-		grid.pb(line);
+	for (string line; getline(cin, line); ) grid.pb(line);
 
-	int H = grid.size(), W = grid[0].size();
-
-	int ans = 0;
+	int H = grid.size(), W = grid[0].size(), partA = 0, partB = 0;
 	REP(i, H) REP(j, W) {
+		bool visible = false;
 		int len = 1;
 		REP(dir, 4) {
 			int dx = vi{ 0, 1, 0, -1 }[dir];
 			int dy = vi{ 1, 0, -1, 0 }[dir];
 
-			int x = i + dx, y = j + dy;
-			int nr = 0;
+			int x = i + dx, y = j + dy, nr = 0;
+			bool is_ok = true;
 			while (0 <= x && x < H && 0 <= y && y < W) {
 				nr++;
-				if (grid[x][y] >= grid[i][j]) break;
+				if (grid[x][y] >= grid[i][j]) { is_ok = false; break; }
 				x += dx; y += dy;
 			}
 			len *= nr;
+			visible |= is_ok;
 		}
 
-		// cerr << len << endl;
-		ans = max(ans, len);
+		if (visible) partA++;
+		partB = max(partB, len);
 	}
 
-	cout << ans << endl;
-
+	printf("Part A: %d\n", partA);
+	printf("Part B: %d\n", partB);
 	return 0;
 }

@@ -34,13 +34,14 @@ int main() {
 		}
 	}
 
-	vector<bool> grid(6 * 40 + 1, false);
-
-	for (int time = 1; time <= 40; time++) {
-		cout << values[time] << " ";
+	ll ans = 0;
+	for (int time = 20; time <= 220; time += 40) {
+		ans += time * values[time];
 	}
-	cout << endl;
 
+	printf("Part A: %lld\n", ans);
+
+	vector<bool> grid(6 * 40 + 1, false);
 
 	for (int time = 1; time <= 240; time++) {
 		if (abs(((time-1) % 40) - values[time]) <= 1) {
@@ -48,11 +49,12 @@ int main() {
 		}
 	}
 
+	printf("Part B:\n");
 	for (int row = 1, pos = 1; row <= 6; row++) {
 		for (int col = 1; col <= 40; col++, pos++) {
-			cout << (grid[pos] ? '#' : ' ');
+			printf("%c", grid[pos] ? '#' : ' ');
 		}
-		cout << endl;
+		printf("\n");
 	}
 	return 0;
 }

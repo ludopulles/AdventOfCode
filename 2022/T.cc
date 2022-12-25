@@ -7,7 +7,7 @@ typedef vector<ii> vii;
 #define rep(i,a,b) for (auto i = (a); i < (b); ++i)
 #define REP(i,n) rep(i,0,n)
 #define sz(v) ((int) (v).size())
-#define all(v) (v).begin(), (v).end()
+#define all(v) begin(v), end(v)
 #define pb push_back
 #define eb emplace_back
 #define x first

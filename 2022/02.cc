@@ -12,25 +12,27 @@ typedef pair<ll,ll> ii;
 #define x first
 #define y second
 
+int profit[3][3] = {
+	{ 0, 6, 3 }, { 3, 0, 6 }, { 6, 3, 0 }
+};
+
 int main() {
 	string line;
-	int occ[256];
 
-	int result = 0;
+	int scoreA = 0, scoreB = 0;
 
-	while (getline(cin, line), cin) {
-		int n = line.size() / 2;
+	while (getline(cin, line)) {
+		int a = line[0] - 'A';
+		int b = line[2] - 'X';
+		assert(0 <= a && a <= 2 && 0 <= b && b <= 2);
 
-		fill_n(occ, 256, 0);
-		for (int i = 0; i < n; i++) occ[line[i]] = 1;
-		for (int i = n; i < n + n; i++) occ[line[i]] |= 2;
+		scoreA += 1 + b + 3 * ((b - a + 4) % 3);
 
-		for (char ch = 'a'; ch <= 'z'; ch++) {
-			if (occ[ch] == 3) result += ch - 'a' + 1;
-			if (occ[ch + 'A' - 'a'] == 3) result += ch - 'a' + 27;
-		}
+		int c = (b + a + 2) % 3;
+		scoreB += 1 + c + 3 * b;
 	}
 
-	cout << result << endl;
+	printf("Part A: %d\n", scoreA);
+	printf("Part B: %d\n", scoreB);
 	return 0;
 }

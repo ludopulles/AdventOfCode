@@ -14,39 +14,33 @@ def cmp(a, b):
         res = cmp(a[i], b[i])
         if res != 0:
             return res
+    return len(a) - len(b)
 
-    if len(a) < len(b):
-        return -1
-    if len(a) == len(b):    
-        return 0
-    if len(a) > len(b):
-        return +1
+A = [ [[2]], [[6]] ]
 
-    exit("WHAT")
-
-A = [  [[2]], [[6]]  ]
-
+idx, partA = 0, 0
 try:
     while True:
+        idx += 1
         s1 = eval(input())
         s2 = eval(input())
-        A.append(s1)
-        A.append(s2)
+
+        if cmp(s1, s2) <= 0:
+            partA += idx
+        A += [s1, s2]
 
         input()
 except EOFError:
-    print("DONE READING INPUT")
+    pass
 
+idx2, idx6 = 0, 0
 A = sorted(A, key=cmp_to_key(cmp))
-for x in A:
-    print(x)
 
-idx2 = -1
-idx6 = -1
 for i in range(len(A)):
     if cmp([[2]], A[i]) == 0:
         idx2 = i + 1
     if cmp([[6]], A[i]) == 0:
         idx6 = i + 1
 
-print(idx2, idx6, idx2 * idx6)
+print("Part A:", partA)
+print("Part B:", idx2 * idx6)

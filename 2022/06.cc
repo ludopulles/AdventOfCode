@@ -14,17 +14,13 @@ typedef pair<ll,ll> ii;
 
 int main() {
 	string line;
+	getline(cin, line);
 
-	while (getline(cin, line), cin) {
-		for (int i = 4; i <= line.size(); i++) {
-			set<int> S;
-			for (int j = i - 4; j < i; j++) S.insert(line[j]);
-			if (S.size() == 4) {
-				cout << i << endl;
-				break;
-			}
-		}
-	}
+	int a, b;
+	for (a = 4; sz(set<int>(begin(line) + a - 4, begin(line) + a)) < 4; a++);
+	for (b = 14; sz(set<int>(begin(line) + b - 14, begin(line) + b)) < 14; b++);
 
+	printf("Part A: %d\n", a);
+	printf("Part B: %d\n", b);
 	return 0;
 }

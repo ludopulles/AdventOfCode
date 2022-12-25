@@ -25,18 +25,16 @@ vector<vii> paths;
 bitset<1000> grid0[1000], grid[1000];
 
 int main() {
-	int minX = INT_MAX, maxX = INT_MIN, maxY = 0;
+	ll minX = INT_MAX, maxX = INT_MIN, maxY = 0;
 
 	string line;
 	while (getline(cin, line), cin) {
 		// parse x,y -> x,y -> x,y ...
-		int pos = 0;
 		vii path;
-		while (pos < sz(line)) {
-			int x = parseInt(line, pos);
+		for (int pos = 0; pos < sz(line); pos += 4) {
+			ll x = parseInt(line, pos);
 			assert(line[pos++] == ',');
-			int y = parseInt(line, pos);
-			pos += 4; // ' -> '
+			ll y = parseInt(line, pos);
 
 			path.eb(x, y);
 
@@ -49,9 +47,8 @@ int main() {
 
 	REP(i, 1000) grid[i].set(maxY + 2);
 
-	cout << "BOUNDS: x \\in {" << minX << ", " << maxX << "} and y \\in {0, " << maxY << "}" << endl;
 	for (vii path : paths) {
-		int x0 = path[0].x, y0 = path[0].y;
+		ll x0 = path[0].x, y0 = path[0].y;
 		grid[x0].set(y0);
 		for (auto [x,y] : path) {
 			assert(x0 == x || y0 == y);
@@ -64,7 +61,7 @@ int main() {
 
 	REP(i, 1000) grid0[i] = grid[i];
 
-	int fallen = 0, cx, cy;
+	ll partA = 0, partB = 0, cx, cy;
 	while (true) {
 		cx = 500;
 		cy = 0;
@@ -80,10 +77,12 @@ int main() {
 		}
 
 		grid[cx].set(cy);
-		fallen++;
+		if (cy <= maxY && partA == partB) partA++, partB++;
+		else partB++;
 	}
 
-	cout << fallen << endl;
+	printf("Part A: %lld\n", partA);
+	printf("Part B: %lld\n", partB);
 
 	return 0;
 }
