@@ -36,18 +36,34 @@ struct State {
 		if (r[0] >= MAXORE && a[0] >= MAXORE) a[0] = 100;
 	}
 
-	vector<State> neighbours() const
-	{
-		vector<State> res;
+	int lower_bound(int time_left) const {
+		int rr[4] = { r[0], r[1], r[2], r[3] };
+		int aa[4] = { a[0], a[1], a[2], a[3] };
+		while (time_left --> 0) {
+			REP(i, 4) aa[i] += rr[i];
 
-		// greedy:
-		if (a[0] >= R03 && a[2] >= R23) {
-			res.eb(
-				a[0] + r[0] - R03, a[1] + r[1], a[2] + r[2] - R23, a[3] + r[3],
-				r[0], r[1], r[2], r[3] + 1
-			);
-			return res;
+			// make the robot that is latest
+			if (aa[2] >= R23 && aa[0] >= R03) rr[3]++, aa[2] -= R23, aa[0] -= R03;
+			else if (aa[1] >= R12 && aa[0] >= R02) rr[2]++, aa[1] -= R12, aa[0] -= R02;
+			else if (aa[0] >= R01) rr[1]++, aa[0] -= R01;
+			else if (aa[0] >= R00) rr[0]++, aa[0] -= R00;
 		}
+		return aa[3];
+	}
+
+	int upper_bound(int time_left) const {
+		// Suppose we build a geode robot every second, what is the best we can do?
+		int nrobot = r[3];
+		int ngeode = a[3];
+		while (time_left --> 0) {
+			ngeode += nrobot;
+			nrobot++;
+		}
+		return ngeode;
+	}
+
+	vector<State> neighbours() const {
+		vector<State> res;
 
 		// Always build something when there is enough ore...
 		if (a[0] + r[0] < 2 * MAXORE) {
@@ -81,6 +97,14 @@ struct State {
 				r[0], r[1], r[2] + 1, r[3]
 			);
 		}
+
+		if (a[0] >= R03 && a[2] >= R23) {
+			res.eb(
+				a[0] + r[0] - R03, a[1] + r[1], a[2] + r[2] - R23, a[3] + r[3],
+				r[0], r[1], r[2], r[3] + 1
+			);
+		}
+
 		return res;
 	}
 };
@@ -108,31 +132,30 @@ namespace std {
 	};
 }
 
-
-pair<int, int> solve(bool andB) {
+int solveT(int time) {
 	unordered_set<State> cur, nxt;
-
-	int ansA = 0;
-
 	cur.emplace(0,0,0,0, 1,0,0,0);
-	for (int t = 1; t <= (andB ? 32 : 24); t++) {
-		for (const State &s : cur) {
+	for (int t = 1; t <= time; t++) {
+		for (const State &s : cur)
 			for (State ss : s.neighbours()) nxt.insert(ss);
+
+		int bestLowerBound = 0;
+		for (const State &s : nxt) {
+			int lowerBound = s.lower_bound(time - t);
+			if (lowerBound > bestLowerBound) bestLowerBound = lowerBound;
 		}
 
 		cur.clear();
-		cur = nxt;
 
-		if (t == 24) {
-			for (const State &s : cur)
-				ansA = max(ansA, s.a[3]);
-		}
+		for (const State &s : nxt)
+			if (s.upper_bound(time - t) >= bestLowerBound)
+				cur.insert(s);
+		nxt.clear();
 	}
 
-	int ansB = 0;
-	for (const State &s : cur)
-		ansB = max(ansB, s.a[3]);
-	return make_pair(ansA, ansB);
+	int res = 0;
+	for (const State &s : cur) res = max(res, s.a[3]);
+	return res;
 }
 
 void parse(int nr, string &line)
@@ -165,22 +188,19 @@ void parse(int nr, string &line)
 
 
 int main() {
-	string line;
-	int nr = 0;
-	ll partA = 0, partB = 1;
-	while (getline(cin, line), cin) {
+	ll partA = 0, partB = 1, nr = 0;
+	for (string line; getline(cin, line); ) {
 		parse(++nr, line);
 
-		auto [resA, resB] = solve(nr <= 3);
+		int resA = solveT(24);
 		partA += nr * resA;
 		if (nr <= 3) {
+			int resB = solveT(32);
 			partB *= resB;
-			printf("Line %d: %d, %d\n", nr, resA, resB);
+			printf("Line %lld: %d, %d\n", nr, resA, resB);
 		} else {
-			printf("Line %d: %d\n", nr, resA);
+			printf("Line %lld: %d\n", nr, resA);
 		}
-
-		// if (nr >= 3) break;
 	}
 
 	printf("Part A: %lld\n", partA);
