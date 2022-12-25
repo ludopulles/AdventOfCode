@@ -1,22 +1,22 @@
 #!/usr/bin/python3
-import datetime, json, sys
+import json, sys
 import numpy as np
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Rectangle
 from matplotlib.lines import Line2D
 
-if len(sys.argv) != 2 and len(sys.argv) != 3:
-    exit("Usage: " + sys.argv[0] + " [day] <json-file>\n")
+if len(sys.argv) >= 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
+    sys.exit(f'Usage: {sys.argv[0]} [json-file] [day]')
 
-day_limit = 25
-if len(sys.argv) == 3:
-    day_limit = int(sys.argv[1])
+json_file = str(datetime.now().year) + '.json' if len(sys.argv) < 2 else sys.argv[1]
+day_limit = 25 if len(sys.argv) < 3 else int(sys.argv[2])
 
-with open(sys.argv[-1], 'r') as myfile:
+with open(json_file, 'r') as myfile:
     data = json.loads(myfile.read())
 
-
-OFFSET = int((datetime.datetime(int(data['event']),12,1)-datetime.datetime(1970,1,1)).total_seconds())
+OFFSET = int((datetime(int(data['event']),12,1) - datetime(1970,1,1)).total_seconds())
 MARKERS = 'DXos'
 MARKERSIZES = [5,6,5,5]
 COLORS = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
@@ -36,8 +36,8 @@ for x in scores.values():
     results[str(name)] = res
     #print(str(name), ','.join('{}:({},{})'.format(
     #    d,
-    #    '{}:{}:{}'.format(int(s1//1), int(((s1*60)%60)//1), int(((s1*3600)%60)//1)) if s1 is not None else "None",
-    #    '{}:{}:{}'.format(int(s2//1), int(((s2*60)%60)//1), int(((s2*3600)%60)//1)) if s2 is not None else "None"
+    #    '{}:{}:{}'.format(int(s1//1), int(((s1*60)%60)//1), int(((s1*3600)%60)//1)) if s1 is not None else 'None',
+    #    '{}:{}:{}'.format(int(s2//1), int(((s2*60)%60)//1), int(((s2*3600)%60)//1)) if s2 is not None else 'None'
     #) for d,(s1,s2) in sorted(res.items())))
 
 fig = plt.figure(figsize=(11,10))
@@ -72,7 +72,6 @@ for i,(name,res) in enumerate(sorted(results.items(), key=lambda x : x[0].lower(
         marker = MARKERS[i//len(COLORS)]
         markersize = MARKERSIZES[i//len(COLORS)]
         ax.plot(newxs, newys, marker=marker, markersize=markersize, linestyle='', color=color, label=name if j == 0 else None, zorder=10)
-        #ax.plot(newxs + [0] if name in ['noahiscool13','Olaf Erkemeij'] else [], newys + [28 if name == 'noahiscool13' else 27.5] if name in ['noahiscool13','Olaf Erkemeij'] else [], color=color, linestyle='--' if j == 1 else '-', alpha=.2)
         if len(newxs) == 25:
             newxs += [0]
             newys += [27]
@@ -115,6 +114,6 @@ ax.set_xticklabels(map(lambda x : '{}:00'.format(x%24), xticks))
 ax.set_yticks(yticks)
 ax.set_yticklabels(map(lambda y : 'Day {}'.format(y), yticks))
 ax.set_xlabel('Local time')
-fig.savefig('scores.png')
+fig.savefig('table.png')
 #plt.show()
 
