@@ -86,8 +86,8 @@ int main() {
 		sumB += fd*10 + ld;
 	}
 
-	cout << sumA << endl;
-	cout << sumB << endl;
+	cout << "Part A: " << sumA << endl;
+	cout << "Part B: " << sumB << endl;
 
 	return 0;
 }
