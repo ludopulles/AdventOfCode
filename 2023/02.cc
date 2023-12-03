@@ -17,7 +17,7 @@ bool is_num(const string &s, int &pos) {
 	return pos < sz(s) && (s[pos] == '-' || ('0' <= s[pos] && s[pos] <= '9'));
 }
 
-ll parseInt(const string &s, int &pos) {
+ll parse_int(const string &s, int &pos) {
 	ll res = 0, sgn = 1;
 	if (pos < sz(s) && s[pos] == '-') sgn = -1, pos++;
 	while (pos < sz(s) && '0' <= s[pos] && s[pos] <= '9')
