@@ -68,10 +68,16 @@ ax.set_xlim((-w, w))
 ax.set_ylim((0, 29))
 
 for i, (name, res) in enumerate(sorted(results.items(), key=lambda x: x[0].lower())):
-    if not res:
-        continue
+    # if not res:
+    # continue
+    # print(name, " -> ", res, flush=True)
+    # print([(x[0], d) for d, x in sorted(res.items()) if x[0] is not None])
+    # print([(x[1], d) for d, x in sorted(res.items()) if x[1] is not None])
     for j in range(2):
-        xs, ys = zip(*[(x[j], d) for d, x in sorted(res.items()) if x[j] is not None])
+        lst = [(x[j], d) for d, x in sorted(res.items()) if x[j] is not None]
+        if not lst:
+            continue
+        xs, ys = zip(*lst)
         newxs, newys = [], []
         for x, y in filter(lambda z: 6 <= z[0] <= 24, zip(xs, ys)):
             [x1, x2], [y1, y2] = line_endpoints[y-1]
@@ -102,10 +108,11 @@ ax.set_ylim((0, 26))
 for i in range(1, 26):
     ax.plot([6, 24], [i, i], color = 'k')
 for i, (name, res) in enumerate(sorted(results.items(), key=lambda x: x[0].lower())):
-    if not res:
-        continue
     for j in range(2):
-        xs, ys = zip(*[(x[j], d) for d, x in sorted(res.items()) if x[j] is not None])
+        lst = [(x[j], d) for d, x in sorted(res.items()) if x[j] is not None]
+        if not lst:
+            continue
+        xs, ys = zip(*lst)
         color = COLORS[i % len(COLORS)]
         marker = MARKERS[i//len(COLORS)]
         markersize = MARKERSIZES[i//len(COLORS)]
