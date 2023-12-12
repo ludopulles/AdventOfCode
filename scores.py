@@ -96,7 +96,7 @@ for i, (name, res) in enumerate(sorted(results.items(), key=lambda x: x[0].lower
 ax.set_position([0.025, 0, 0.95, 1])
 fig.legend(loc='upper left', framealpha=1, bbox_to_anchor=(0, 1))
 ax.axis('off')
-fig.savefig('tree.png')
+fig.savefig('tree.png', dpi=256)
 # plt.show()
 
 
