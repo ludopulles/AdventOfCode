@@ -1,21 +1,4 @@
-#include<bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef pair<ll,ll> ii;
-typedef vector<ll> vi;
-typedef vector<ii> vii;
-#define rep(i,a,b) for (auto i = (a); i < (b); ++i)
-#define REP(i,n) rep(i,0,n)
-#define sz(v) ((int) (v).size())
-#define all(v) begin(v), end(v)
-#define pb push_back
-#define eb emplace_back
-#define x first
-#define y second
-
-/**************************************************************************************************
- * Code for today is below:
- *************************************************************************************************/
+#include "header.h"
 
 vector<string> grid;
 int H, W;
@@ -61,34 +44,34 @@ int main() {
 
 	cout << "Part A: " << sumA << endl;
 
-	REP(i, H) {
+	REP(k, H) {
 		ll cur = 0;
 		energized.assign(H, vector<bool>(W, false));
 		REP(x, 4) seen[x].assign(H, vector<bool>(W, false));
-		dfs(i, 0, 0);
+		dfs(k, 0, 0);
 		REP(i, H) REP(j, W) cur += energized[i][j];
 		sumB = max(sumB, cur);
 
 		cur = 0;
 		energized.assign(H, vector<bool>(W, false));
 		REP(x, 4) seen[x].assign(H, vector<bool>(W, false));
-		dfs(i, W-1, 2);
+		dfs(k, W-1, 2);
 		REP(i, H) REP(j, W) cur += energized[i][j];
 		sumB = max(sumB, cur);
 	}
 
-	REP(j, W) {
+	REP(k, W) {
 		ll cur = 0;
 		energized.assign(H, vector<bool>(W, false));
 		REP(x, 4) seen[x].assign(H, vector<bool>(W, false));
-		dfs(0, j, 1);
+		dfs(0, k, 1);
 		REP(i, H) REP(j, W) cur += energized[i][j];
 		sumB = max(sumB, cur);
 
 		cur = 0;
 		energized.assign(H, vector<bool>(W, false));
 		REP(x, 4) seen[x].assign(H, vector<bool>(W, false));
-		dfs(H - 1, j, 3);
+		dfs(H - 1, k, 3);
 		REP(i, H) REP(j, W) cur += energized[i][j];
 		sumB = max(sumB, cur);
 	}

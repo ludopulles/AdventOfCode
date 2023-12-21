@@ -1,17 +1,4 @@
-#include<bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef pair<ll,ll> ii;
-typedef vector<ll> vi;
-typedef vector<ii> vii;
-#define rep(i,a,b) for (auto i = (a); i < (b); ++i)
-#define REP(i,n) rep(i,0,n)
-#define sz(v) ((int) (v).size())
-#define all(v) begin(v), end(v)
-#define pb push_back
-#define eb emplace_back
-#define x first
-#define y second
+#include "header.h"
 
 string route;
 unordered_map<string, string> L, R;
@@ -57,9 +44,9 @@ int main() {
 		R[fr] = toR;
 	}
 
-	string cur = "AAA";
-	int idxRoute = 0;
-	if (find(all(nodes), cur) != nodes.end()) {
+	if (find(all(nodes), "AAA") != nodes.end()) {
+		string cur = "AAA";
+		int idxRoute = 0;
 		while (cur != "ZZZ") {
 			if (route[idxRoute] == 'L') cur = L[cur];
 			else cur = R[cur];
@@ -73,12 +60,9 @@ int main() {
 
 	to_next_Z.resize(sz(route));
 
-	int n = curnodes.size();
-
 	sumB = 1;
-	for (int i = 0; i < n; i++) {
+	for (string cur : curnodes) {
 		int st = 0;
-		string cur = curnodes[i];
 		while (to_next_Z[st % sz(route)].find(cur) == to_next_Z[st % sz(route)].end()) {
 			auto [nxt, add] = num_steps(st % sz(route), cur);
 			cur = nxt;
@@ -86,9 +70,9 @@ int main() {
 		}
 
 		auto [nxt, add] = to_next_Z[st % sz(route)][cur];
-		assert(cur == nxt && add % sz(route) == 0);
-		assert(st % add == 0);
 
+		assert(cur == nxt);
+		assert(st % add == 0);
 		sumB = sumB / gcd(sumB, add) * add;
 	}
 
