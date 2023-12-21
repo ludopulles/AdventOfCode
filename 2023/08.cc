@@ -4,11 +4,6 @@ string route;
 unordered_map<string, string> L, R;
 vector<unordered_map<string, pair<string, ll>>> to_next_Z;
 
-ll gcd(ll a, ll b) {
-	while (b) { a %= b; swap(a, b); }
-	return a;
-}
-
 pair<string, ll> num_steps(const int i, const string &s) {
 	if (to_next_Z[i].find(s) == to_next_Z[i].end()) {
 		int idxRoute = i, steps = 0;
