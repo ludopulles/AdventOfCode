@@ -62,3 +62,6 @@ pair<string, string> split_at(string s, string split) {
 
 	return make_pair(s.substr(0, pos), s.substr(pos + split.size()));
 }
+
+vector<string> split_str(const string &s, char c) { return split_str(s, string(1, c)); }
+pair<string, string> split_at(const string &s, char c) { return split_at(s, string(1, c)); }
