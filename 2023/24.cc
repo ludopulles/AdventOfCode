@@ -1,14 +1,13 @@
 #include "header.h"
 
 typedef long double ld;
-#define EPS (1e-10)
 
-ll LEFT, RIGHT;
-
+// ================================================================================
 struct pt { ll x, y, z; };
-struct pt2 { ll x, y; };
-
 typedef pair<ld, ld> ptd;
+
+ostream& operator<<(ostream &out, const pt &p) { return out << '(' << p.x << ',' << p.y << ',' << p.z << ')'; }
+ostream& operator<<(ostream &out, const ii &p) { return out << '(' << p.x << ',' << p.y << ')'; }
 
 pt read_pt(const string &s) {
 	vi v = parse_ints(split_str(s, ", "));
@@ -16,35 +15,40 @@ pt read_pt(const string &s) {
 }
 
 pt operator-(const pt &a, const pt &b) { return pt{ a.x - b.x, a.y - b.y, a.z - b.z }; }
-pt2 cast(const pt &p) { return pt2{ p.x, p.y }; }
+pt operator+(const pt &a, const pt &b) { return pt{ a.x + b.x, a.y + b.y, a.z + b.z }; }
+ii cast(const pt &p) { return ii{ p.x, p.y }; }
 
-pt2 operator+(const pt2 &a, const pt2 &b) { return pt2{ a.x + b.x, a.y + b.y }; }
-pt2 operator-(const pt2 &a, const pt2 &b) { return pt2{ a.x - b.x, a.y - b.y }; }
-pt2 operator*(const pt2 &a, ll sc) { return pt2{ a.x * sc, a.y * sc }; }
-ptd operator*(const pt2 &a, ld sc) { return make_pair(a.x * sc, a.y * sc); }
+ii operator+(const ii &a, const ii &b) { return ii{ a.x + b.x, a.y + b.y }; }
+ii operator-(const ii &a, const ii &b) { return ii{ a.x - b.x, a.y - b.y }; }
+ii operator*(const ii &a, ll sc) { return ii{ a.x * sc, a.y * sc }; }
+ptd operator*(const ii &a, ld sc) { return make_pair(a.x * sc, a.y * sc); }
 ptd operator*(const ptd &a, ld sc) { return make_pair(a.x * sc, a.y * sc); }
+pt operator*(const pt &a, ll sc) { return pt{a.x * sc, a.y * sc, a.z * sc}; }
 
 ptd operator+(const ptd &a, const ptd &b) { return ptd{ a.x + b.x, a.y + b.y }; }
 ptd operator-(const ptd &a, const ptd &b) { return ptd{ a.x - b.x, a.y - b.y }; }
 
-ld operator^(const pt2 &a, const pt2 &b) { return (ld)a.x * b.y - (ld)a.y * b.x; }
-ld operator*(const pt2 &a, const pt2 &b) { return (ld)a.x * b.x + (ld)a.y * b.y; }
+ll operator^(const ii &a, const ii &b) { return a.x * b.y - a.y * b.x; }
+ll operator*(const ii &a, const ii &b) { return a.x * b.x + a.y * b.y; }
 
-vector<pt> x, v;
-
-bool linesIntersect(pt2 a, pt2 b, pt2 c, pt2 d) {
-	return abs((a-b) ^ (c-d)) > EPS;
+bool linesIntersect(ii a, ii b, ii c, ii d) {
+	return ((a-b) ^ (c-d)) != 0;
 }
 
-ptd lineLineIntersection(pt2 a, pt2 b, pt2 c, pt2 d) {
+ptd lineLineIntersection(ii a, ii b, ii c, ii d) {
 	ld det = (a-b) ^ (c-d);
-	assert(abs(det) > EPS);
+	assert(det != 0);
 	return ((c-d)*(a^b) - (a-b)*(c^d)) * (ld(1.0)/det);
 }
 
+// ================================================================================
+vector<pt> x, v;
+int n;
+ll LEFT, RIGHT;
+
 bool collide2D(int i, int j) {
-	pt2 pi = cast(x[i]), qi = pi + cast(v[i]);
-	pt2 pj = cast(x[j]), qj = pj + cast(v[j]);
+	ii pi = cast(x[i]), qi = pi + cast(v[i]);
+	ii pj = cast(x[j]), qj = pj + cast(v[j]);
 	if (!linesIntersect(pi, qi, pj, qj)) return false;
 
 	auto [Ix, Iy] = lineLineIntersection(pi, qi, pj, qj);
@@ -54,12 +58,59 @@ bool collide2D(int i, int j) {
 	return ti >= 0 && tj >= 0 && (LEFT <= Ix && Ix <= RIGHT && LEFT <= Iy && Iy <= RIGHT);
 }
 
-bool collide3D(int i, int j) {
-	return false;
+// ================================================================================
+ll psqrt(ll x) {
+	ll n = floor(sqrt(x));
+	while ((n + 1) * (n + 1) <= x) n++;
+	return n;
 }
 
+bool operator==(const pt &a, const pt &b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
+
+bool test_velocity(const pt vg, pt &xg) {
+	ii v0 = cast(v[0] - vg), v1 = cast(v[1] - vg);
+	ll det = v0 ^ v1;
+	if (det == 0) return false;
+
+	ii inter = v0 * (cast(x[1]) ^ v1) - v1 * (cast(x[0]) ^ v0);
+	if (inter.x % det != 0 || inter.y % det != 0) return false;
+	inter = ii(inter.x / det, inter.y / det);
+
+	REP(i, 2) {
+		pt vi = v[i] - vg;
+		if (vi.x != 0 && (inter.x - x[i].x) % vi.x != 0) return false;
+		if (vi.y != 0 && (inter.y - x[i].y) % vi.y != 0) return false;
+	}
+	ll t0 = v0.x != 0 ? (inter.x - x[0].x) / v0.x : (inter.y - x[0].y) / v0.y;
+	ll t1 = v1.x != 0 ? (inter.x - x[1].x) / v1.x : (inter.y - x[1].y) / v1.y;
+
+	if (t0 < 0) return false;
+	if (t1 < 0) return false;
+
+	xg = pt{ inter.x, inter.y, x[0].z + t0 * (v[0] - vg).z };
+	if (xg.z != x[1].z + t1 * (v[1] - vg).z)
+		return false;
+
+	rep(i, 2, n) {
+		pt vi = v[i] - vg;
+		if (vi.x != 0 && (xg.x - x[i].x) % vi.x != 0) return false;
+		if (vi.y != 0 && (xg.y - x[i].y) % vi.y != 0) return false;
+		if (vi.z != 0 && (xg.z - x[i].z) % vi.z != 0) return false;
+
+		ll ti = vi.x != 0 ? ((xg.x - x[i].x) / vi.x)
+			:  (vi.y != 0 ? ((xg.y - x[i].y) / vi.y)
+			:               ((xg.z - x[i].z) / vi.z));
+
+		pt loc = x[i] + vi * ti;
+		if (!(loc == xg)) return false;
+	}
+
+	return true;
+}
+
+// ================================================================================
 int main() {
-	ll sumA = 0, sumB = 0;
+	ll sumA = 0;
 
 	string line;
 	while (getline(cin, line), cin) {
@@ -67,34 +118,34 @@ int main() {
 		x.pb(read_pt(pos));
 		v.pb(read_pt(vel));
 	}
+	n = sz(x);
 
-	LEFT  = sz(x) >= 100 ? 200000000000000 :  7;
-	RIGHT = sz(x) >= 100 ? 400000000000000 : 27;
+	LEFT  = n >= 100 ? 200000000000000 :  7;
+	RIGHT = n >= 100 ? 400000000000000 : 27;
 
-	REP(i, sz(x)) REP(j, i) {
-		if (collide2D(i, j)) {
-			sumA++;
-			if (collide3D(i, j)) sumB++;
+	REP(i, n) REP(j, i)
+		sumA += collide2D(i, j);
+	cout << "Part A: " << sumA << endl;
+
+	pt loc;
+	for (ll normsq = 0;; normsq++) {
+		ll vx0 = psqrt(normsq);
+		for (ll vx = -vx0; vx <= vx0; vx++) {
+			ll vy0 = psqrt(normsq - vx * vx);
+			for (ll vy = -vy0; vy <= vy0; vy++) {
+				ll vz2 = normsq - vx * vx - vy * vy;
+				ll usvz = psqrt(vz2);
+				if (usvz * usvz != vz2) continue;
+				for (ll vz : {-usvz, usvz}) {
+					pt v{vx, vy, vz};
+					if (test_velocity(v, loc)) {
+						cout << "Solution: " << loc << " @ " << v << endl;
+						return 0;
+					}
+				}
+			}
 		}
 	}
 
-	cout << "Part A: " << sumA << endl;
-
-	pt shift_x = x[0], shift_v = v[0];
-	REP(i, sz(x)) x[i] = x[i] - shift_x, v[i] = v[i] - shift_v;
-
-	pt MIN{LLONG_MAX, LLONG_MAX, LLONG_MAX}, MAX{LLONG_MIN, LLONG_MIN, LLONG_MIN};
-	REP(i, sz(x)) MIN.x = min(MIN.x, x[i].x);
-	REP(i, sz(x)) MIN.y = min(MIN.y, x[i].y);
-	REP(i, sz(x)) MIN.z = min(MIN.z, x[i].z);
-	REP(i, sz(x)) MAX.x = max(MAX.x, x[i].x);
-	REP(i, sz(x)) MAX.y = max(MAX.y, x[i].y);
-	REP(i, sz(x)) MAX.z = max(MAX.z, x[i].z);
-
-	cout << "[" << MIN.x << ", " << MAX.x << "]" << endl;
-	cout << "[" << MIN.y << ", " << MAX.y << "]" << endl;
-	cout << "[" << MIN.z << ", " << MAX.z << "]" << endl;
-
-	cout << "Part B: " << sumB << endl;
 	return 0;
 }
